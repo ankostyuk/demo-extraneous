@@ -48,7 +48,7 @@ exports.getCompanyRegDocs = function(req, success, error) {
             return;
         }
 
-        var data = parser.parseHtml(body);
+        var data = parser.parseCompanyRegDocsHtml(body);
 
         success(data);
     });
