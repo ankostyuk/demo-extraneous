@@ -1,0 +1,19 @@
+{
+    "name": "extraneous",
+    "version": "1.0.0-SNAPSHOT",
+    "description": "extraneous",
+
+    "author": {
+        "name": "nullpointer",
+        "url": "http://null-pointer.ru/"
+    },
+
+    "repository": {
+    },
+
+    "dependencies": {
+    },
+
+    "devDependencies": {
+    }
+}
