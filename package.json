@@ -11,7 +11,10 @@
     "repository": {},
 
     "dependencies": {
+        "lodash": "3.*",
+        "underscore.string": "3.*",
         "express": "4.*",
+        "request": "2.*",
         "nconf": "0.7.*"
     },
 
