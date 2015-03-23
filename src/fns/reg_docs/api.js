@@ -37,7 +37,7 @@ exports.getCompanyRegDocs = function(req, success, error) {
 
     var form = _.extend({}, config.defaultForm, {
         ogrn: req.ogrn
-    })
+    });
 
     request.post({
         url: url,
@@ -48,7 +48,7 @@ exports.getCompanyRegDocs = function(req, success, error) {
             return;
         }
 
-        var data = parser.parse(body);
+        var data = parser.parseHtml(body);
 
         success(data);
     });
