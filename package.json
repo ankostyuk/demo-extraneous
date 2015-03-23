@@ -8,12 +8,17 @@
         "url": "http://null-pointer.ru/"
     },
 
-    "repository": {
-    },
+    "repository": {},
 
     "dependencies": {
+        "express": "4.*",
+        "nconf": "0.7.*"
     },
 
-    "devDependencies": {
+    "devDependencies": {},
+    "optionalDependencies": {},
+
+    "engines": {
+        "node": "*"
     }
 }
