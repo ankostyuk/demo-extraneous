@@ -46,7 +46,13 @@ var bankruptcyConfig = {
         url: 'http://bankrot.fedresurs.ru/DebtorsSearch.aspx',
         defaultForm: _.extend({}, fedresursBankruptcyDefaultForm, {}),
         defaultHeaders: _.extend({}, fedresursBankruptcyDefaultHeaders, {}),
-        emptyResponseData: {}
+        emptyResponseData: {
+            messages: {}
+        },
+        report: {
+            // baseUrl: 'http://bankrot.fedresurs-xxx.ru'
+            baseUrl: 'http://bankrot.fedresurs.ru'
+        }
     }
 };
 
@@ -54,9 +60,6 @@ var bankruptcyConfig = {
 // req: {
 //      ogrn: (String)
 // }
-// 1089847090893 - РОСПРОДУКТ
-// 1123444006366 - Метизный завод
-// 1127746519900 - НАЛПОИНТЕР
 exports.getCompanyBankruptcy = function(req, success, error) {
     var config  = bankruptcyConfig['company'],
         url     = config.url;
@@ -79,13 +82,29 @@ exports.getCompanyBankruptcy = function(req, success, error) {
             return;
         }
 
-        var companyListData = parser.parseCompanyListHtml(body);
+        var companyListData = parser.parseCompanyListHtml(body),
+            companyListSize = _.size(companyListData.list);
 
-        if (_.isEmpty(companyListData.list)) {
-            success(bankruptcyConfig['company'].emptyResponseData);
+        if (companyListSize === 1) {
+            var company = companyListData.list[0],
+                baseUrl = bankruptcyConfig['company'].report.baseUrl;
+
+            request.get({
+                url: baseUrl + company.link,
+            }, function(err, httpResponse, body) {
+                if (err) {
+                    error(util.format('GET %s failed...\n%s', url, err));
+                    return;
+                }
+
+                var data = parser.parseCompanyBankruptcyHtml(body, {
+                    baseUrl: baseUrl
+                });
+
+                success(data);
+            });
         } else {
-            // var data = parser.parseCompanyBankruptcyHtml(body);
-            // success(data);
+            success(bankruptcyConfig['company'].emptyResponseData);
         }
     });
 };

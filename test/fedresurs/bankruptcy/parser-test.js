@@ -23,6 +23,23 @@ function parseCompanyListFile(htmlFile) {
     return data;
 }
 
+function parseCompanyBankruptcyFile(htmlFile) {
+    var filePath    = path.resolve(__dirname, htmlFile),
+        html        = fs.readFileSync(filePath, readFileOptions);
+
+    var data = parser.parseCompanyBankruptcyHtml(html, {
+        baseUrl: ''
+    });
+
+    console.log('parseCompanyBankruptcyFile...', filePath, '\n', 'messages:', data.messages);
+
+    return data;
+}
+
+//
+// 1089847090893 - РОСПРОДУКТ
+// 1123444006366 - Метизный завод
+// 1127746519900 - НАЛПОИНТЕР
 //
 describe('Банкротства http://bankrot.fedresurs.ru/', function(){
     describe('Списки компаний в результатах поиска', function(){
@@ -62,6 +79,27 @@ describe('Банкротства http://bankrot.fedresurs.ru/', function(){
 
             assert.strictEqual(data.total, 0);
             expect(data.list).to.be.empty;
+        })
+    })
+
+    describe('Карточки компаний', function(){
+        it('РОСПРОДУКТ', function(){
+            var data = parseCompanyBankruptcyFile('data/demo/company-report/1089847090893.html');
+
+            assert.strictEqual(data.messages.total, 16);
+            expect(data.messages.list).to.have.length(16);
+
+            assert.deepEqual({
+                date: '13.08.2015 17:25:07',
+                type: 'Отчет оценщика об оценке имущества должника',
+                link: '/MessageWindow.aspx?ID=1536758B162F65184264FAA1F9319236'
+            }, data.messages.list[0]);
+
+            assert.deepEqual({
+                date: '06.08.2014 12:27:45',
+                type: 'Сообщение о судебном акте',
+                link: '/MessageWindow.aspx?ID=F7892595B08F397855D42BD0D62091B8'
+            }, data.messages.list[15]);
         })
     })
 })
