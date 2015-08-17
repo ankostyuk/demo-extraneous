@@ -24,7 +24,7 @@ function parseFile(htmlFile) {
 }
 
 //
-describe('parser test', function(){
+describe('Документы для государственной регистрации https://service.nalog.ru/', function(){
     it('1057747690890.html', function(){
         var data = parseFile('data/demo/1057747690890.html');
 

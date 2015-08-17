@@ -20,7 +20,10 @@ module.exports = function(grunt) {
                 options: {
                     reporter: 'spec'
                 },
-                src: ['test/fns/reg_docs/parser-test.js']
+                src: [
+                    'test/fns/reg_docs/parser-test.js',
+                    'test/fedresurs/bankruptcy/parser-test.js'
+                ]
             }
         }
     });
