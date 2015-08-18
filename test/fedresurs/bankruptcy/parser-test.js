@@ -80,6 +80,14 @@ describe('Банкротства http://bankrot.fedresurs.ru/', function(){
             assert.strictEqual(data.total, 0);
             expect(data.list).to.be.empty;
         })
+
+        it('Бан запроса', function(){
+            var data = parseCompanyListFile('data/demo/company-list/request_blocking.html');
+
+            assert.deepEqual({
+                error: 'REQUEST_BLOCKING',
+            }, data);
+        })
     })
 
     describe('Карточки компаний', function(){

@@ -85,7 +85,9 @@ exports.getCompanyBankruptcy = function(req, success, error) {
         var companyListData = parser.parseCompanyListHtml(body),
             companyListSize = _.size(companyListData.list);
 
-        if (companyListSize === 1) {
+        if (companyListData.error === 'REQUEST_BLOCKING') {
+            error(util.format('REQUEST_BLOCKING: POST %s; company_ogrn: %s', url, req.ogrn));
+        } else if (companyListSize === 1) {
             var company = companyListData.list[0],
                 baseUrl = bankruptcyConfig['company'].report.baseUrl;
 

@@ -17,6 +17,12 @@ exports.parseCompanyListHtml = function(html) {
     var $       = cheerio.load(html),
         list    = [];
 
+    if ($('#ctl00_cphBody_antiBot_MessageLabel').length) {
+        return {
+            error: 'REQUEST_BLOCKING'
+        };
+    }
+
     $('#ctl00_cphBody_gvDebtors tr').each(function(i){
         // Пропустить первую строку-заголовок
         if (i === 0) {
