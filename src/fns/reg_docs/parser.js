@@ -16,8 +16,8 @@ function date(element) {
 exports.parseCompanyRegDocsHtml = function(html) {
     // console.log('parsing...', html);
 
-    var $ = cheerio.load(html),
-        list = [];
+    var $       = cheerio.load(html),
+        list    = [];
 
     $('#uwsdata tbody tr').each(function(){
         var cols    = $(this).children(),
