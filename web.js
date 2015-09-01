@@ -2,7 +2,8 @@
 var express = require('express'),
     nconf   = require('nconf');
 
-var regDocs = require('./src/fns/reg_docs/api');
+var regDocs     = require('./src/fns/reg_docs/api'),
+    bankruptcy  = require('./src/fedresurs/bankruptcy/api');
 
 //
 nconf.argv().file({
@@ -23,6 +24,23 @@ app.get('/fns/company/reg_docs', function(req, res, next) {
     }
 
     regDocs.getCompanyRegDocs({
+        ogrn: ogrn
+    }, function(data) {
+        res.json(data);
+    }, function(message) {
+        next(message);
+    });
+});
+
+app.get('/fedresurs/company/bankruptcy', function(req, res, next) {
+    var ogrn = req.query.ogrn;
+
+    if (!ogrn) {
+        badRequestError(res, 'Параметр ogrn обязателен');
+        return;
+    }
+
+    bankruptcy.getCompanyBankruptcy({
         ogrn: ogrn
     }, function(data) {
         res.json(data);
