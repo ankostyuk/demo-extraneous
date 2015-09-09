@@ -40,6 +40,7 @@ function parseCompanyBankruptcyFile(htmlFile) {
 // 1089847090893 - РОСПРОДУКТ
 // 1123444006366 - Метизный завод
 // 1127746519900 - НАЛПОИНТЕР
+// 1024701559398 - Шереметьево
 //
 describe('Банкротства http://bankrot.fedresurs.ru/', function(){
     describe('Списки компаний в результатах поиска', function(){
@@ -108,6 +109,25 @@ describe('Банкротства http://bankrot.fedresurs.ru/', function(){
                 type: 'Сообщение о судебном акте',
                 link: '/MessageWindow.aspx?ID=F7892595B08F397855D42BD0D62091B8'
             }, data.messages.list[15]);
+        })
+
+        it('Шереметьево', function(){
+            var data = parseCompanyBankruptcyFile('data/demo/company-report/1024701559398.html');
+
+            assert.strictEqual(data.messages.total, 62);
+            expect(data.messages.list).to.have.length(20);
+
+            assert.deepEqual({
+                date: '08.09.2015 15:07:44',
+                type: 'Сведения о заключении договора купли-продажи',
+                link: '/MessageWindow.aspx?ID=76A22DC6103288B983B4BBD1A4D4316F'
+            }, data.messages.list[0]);
+
+            assert.deepEqual({
+                date: '15.06.2015 14:28:10',
+                type: 'Сообщение о результатах проведения собрания кредиторов',
+                link: '/MessageWindow.aspx?ID=A7427091D1C72AD911E4CF5B0BD8A24E'
+            }, data.messages.list[19]);
         })
     })
 })

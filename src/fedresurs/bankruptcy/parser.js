@@ -23,7 +23,7 @@ exports.parseCompanyListHtml = function(html) {
         };
     }
 
-    $('#ctl00_cphBody_gvDebtors tr').each(function(i){
+    $('#ctl00_cphBody_gvDebtors > tr').each(function(i){
         // Пропустить первую строку-заголовок
         if (i === 0) {
             return;
@@ -48,9 +48,10 @@ exports.parseCompanyListHtml = function(html) {
 
 exports.parseCompanyBankruptcyHtml = function(html, dataOptions) {
     var $           = cheerio.load(html),
-        messagelist = [];
+        messagelist = [],
+        total       = null;
 
-    $('#ctl00_cphBody_gvMessages tr').each(function(i){
+    $('#ctl00_cphBody_gvMessages > tr:not(.pager)').each(function(i){
         // Пропустить первую строку-заголовок
         if (i === 0) {
             return;
@@ -69,10 +70,12 @@ exports.parseCompanyBankruptcyHtml = function(html, dataOptions) {
         messagelist.push(entry);
     });
 
+    total = parseInt($('#ctl00_cphBody_hfMessagesCount').val()) || _.size(messagelist);
+
     return {
         messages: {
             list: messagelist,
-            total: _.size(messagelist)
+            total: total
         }
     };
 };
