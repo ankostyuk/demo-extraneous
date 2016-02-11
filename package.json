@@ -20,11 +20,11 @@
     },
 
     "devDependencies": {
-        "grunt": "~0.4.5",
-        "grunt-contrib-clean": "~0.6",
-        "grunt-contrib-jshint": "~0.10",
+        "grunt": "*",
+        "grunt-contrib-clean": "*",
+        "grunt-contrib-jshint": "*",
 
-        "grunt-mocha-test": "~0.12",
+        "grunt-mocha-test": "*",
         "chai": "*",
 
         "fs-extra": "0.12.*"
