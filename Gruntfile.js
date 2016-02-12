@@ -22,7 +22,8 @@ module.exports = function(grunt) {
                 },
                 src: [
                     'test/fns/reg_docs/parser-test.js',
-                    'test/fedresurs/bankruptcy/parser-test.js'
+                    'test/fedresurs/bankruptcy/parser-test.js',
+                    'test/zakupki.gov/dishonest_supplier/parser-test.js'
                 ]
             }
         }
