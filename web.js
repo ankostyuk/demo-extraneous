@@ -2,8 +2,9 @@
 var express = require('express'),
     nconf   = require('nconf');
 
-var regDocs     = require('./src/fns/reg_docs/api'),
-    bankruptcy  = require('./src/fedresurs/bankruptcy/api');
+var regDocs             = require('./src/fns/reg_docs/api'),
+    bankruptcy          = require('./src/fedresurs/bankruptcy/api'),
+    dishonestSupplier   = require('./src/zakupki.gov/dishonest_supplier/api');
 
 //
 nconf.argv().file({
@@ -42,6 +43,23 @@ app.get('/fedresurs/company/bankruptcy', function(req, res, next) {
 
     bankruptcy.getCompanyBankruptcy({
         ogrn: ogrn
+    }, function(data) {
+        res.json(data);
+    }, function(message) {
+        next(message);
+    });
+});
+
+app.get('/purchase/company/dishonest_supplier', function(req, res, next) {
+    var inn = req.query.inn;
+
+    if (!inn) {
+        badRequestError(res, 'Параметр inn обязателен');
+        return;
+    }
+
+    dishonestSupplier.getCompanyDishonestSupplier({
+        inn: inn
     }, function(data) {
         res.json(data);
     }, function(message) {
