@@ -42,4 +42,10 @@ describe('Реестр недобросовестных поставщиков h
 
         assert.strictEqual(data.total, 0);
     })
+
+    it('not_found.html', function(){
+        var data = parseFile('data/demo/not_found.html');
+
+        assert.strictEqual(data.error, 'FORMAT_NOT_SUPPORTED');
+    })
 })
