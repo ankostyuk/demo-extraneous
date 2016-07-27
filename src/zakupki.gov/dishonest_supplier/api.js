@@ -7,10 +7,14 @@ var parser  = require('./parser');
 //
 var dishonestSupplierConfig = {
     'company': {
-        // url template '...&searchText=<company_inn>...'
-        url: 'http://zakupki.gov.ru/epz/dishonestsupplier/dishonestSuppliersQuickSearch/search.html?placeOfSearch=FZ_44&_placeOfSearch=on&placeOfSearch=FZ_223&_placeOfSearch=on&dateOfInclusionStart=&dateOfInclusionEnd=&sortDirection=false&dishonestSupplierSimpleSorting=UPDATE_DATE&recordsPerPage=_10&pageNumber=1&searchText=<company_inn>&strictEqual=true&morphology=false'
+        // url template '?searchText=<company_inn>...'
+        url: 'http://zakupki.gov.ru/epz/dishonestsupplier/quicksearch/search.html?searchString=<company_inn>&strictEqual=on&pageNumber=1&sortDirection=false&recordsPerPage=_10&fz_44=on&fz_223=on&inclusionDateFrom=&inclusionDateTo=&lastUpdateDateFrom=&lastUpdateDateTo=&sortBy=UPDATE_DATE'
     }
 };
+
+function errorThrow(error, url, e) {
+    error(util.format('GET %s failed...\n%s', url, e));
+}
 
 //
 // req: {
@@ -24,11 +28,16 @@ exports.getCompanyDishonestSupplier = function(req, success, error) {
         url: url
     }, function(err, httpResponse, body) {
         if (err) {
-            error(util.format('GET %s failed...\n%s', url, err));
+            errorThrow(error, url, err);
             return;
         }
 
         var data = parser.parseCompanyDishonestSupplierHtml(body);
+
+        if (data.error) {
+            errorThrow(error, url, data.error);
+            return;
+        }
 
         success(data);
     });
