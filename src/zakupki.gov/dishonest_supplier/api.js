@@ -20,13 +20,20 @@ function errorThrow(error, url, e) {
 // req: {
 //      inn: (String)
 // }
-exports.getCompanyDishonestSupplier = function(req, success, error) {
+exports.getCompanyDishonestSupplier = function(req, success, error, debug) {
     var config  = dishonestSupplierConfig['company'],
         url     = config.url.replace(/<company_inn>/, req.inn);
 
     request.get({
         url: url
     }, function(err, httpResponse, body) {
+        if (debug) {
+            console.log('<<< getCompanyDishonestSupplier...');
+            console.log('url:', url);
+            console.log('body:', body);
+            console.log('>>>');
+        }
+
         if (err) {
             errorThrow(error, url, err);
             return;

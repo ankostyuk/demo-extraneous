@@ -51,7 +51,8 @@ app.get('/fedresurs/company/bankruptcy', function(req, res, next) {
 });
 
 app.get('/purchase/company/dishonest_supplier', function(req, res, next) {
-    var inn = req.query.inn;
+    var inn     = req.query.inn,
+        debug   = req.query.debug === 'true';
 
     if (!inn) {
         badRequestError(res, 'Параметр inn обязателен');
@@ -64,7 +65,7 @@ app.get('/purchase/company/dishonest_supplier', function(req, res, next) {
         res.json(data);
     }, function(message) {
         next(message);
-    });
+    }, debug);
 });
 
 //
