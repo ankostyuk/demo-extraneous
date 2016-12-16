@@ -52,6 +52,27 @@ app.get('/fedresurs/company/bankruptcy', function(req, res, next) {
     });
 });
 
+app.get('/fedresurs/individual/bankruptcy', function(req, res, next) {
+    var inn =   req.query.inn,
+        name =  req.query.name;
+
+    if (!inn && !name) {
+        badRequestError(res, 'Параметр inn или name обязателен');
+        return;
+    }
+
+    bankruptcy.getIndividualBankruptcy({
+        params: {
+            inn: inn,
+            name: name
+        }
+    }, function(data) {
+        res.json(data);
+    }, function(message) {
+        next(message);
+    });
+});
+
 app.get('/purchase/company/dishonest_supplier', function(req, res, next) {
     var inn     = req.query.inn,
         debug   = req.query.debug === 'true';
