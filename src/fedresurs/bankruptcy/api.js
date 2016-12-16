@@ -4,8 +4,8 @@ var request = require('request'),
 
 var parser  = require('./parser');
 
-//
-var fedresursBankruptcyDefaultForm = {
+// Company
+var fedresursCompanyBankruptcyDefaultForm = {
     'ctl00$PrivateOffice1$tbLogin': '',
     'ctl00$PrivateOffice1$tbPassword': '',
     'ctl00$PrivateOffice1$tbEmailForPassword': '',
@@ -30,7 +30,7 @@ var fedresursBankruptcyDefaultForm = {
     'ctl00$cphBody$btnSearch.y': '5'
 };
 
-var fedresursBankruptcyDefaultHeaders = {
+var fedresursCompanyBankruptcyDefaultHeaders = {
     'Host': 'bankrot.fedresurs.ru',
     'Origin': 'http://bankrot.fedresurs.ru',
     'Referer': 'http://bankrot.fedresurs.ru/DebtorsSearch.aspx',
@@ -44,8 +44,8 @@ var bankruptcyConfig = {
     'company': {
         // url: 'http://bankrot.fedresurs-xxx.ru/DebtorsSearch.aspx',
         url: 'http://bankrot.fedresurs.ru/DebtorsSearch.aspx',
-        defaultForm: _.extend({}, fedresursBankruptcyDefaultForm, {}),
-        defaultHeaders: _.extend({}, fedresursBankruptcyDefaultHeaders, {}),
+        defaultForm: _.extend({}, fedresursCompanyBankruptcyDefaultForm, {}),
+        defaultHeaders: _.extend({}, fedresursCompanyBankruptcyDefaultHeaders, {}),
         emptyResponseData: {
             messages: {}
         },
@@ -56,21 +56,8 @@ var bankruptcyConfig = {
     }
 };
 
-//
-// req: {
-//      ogrn: (String)
-// }
-exports.getCompanyBankruptcy = function(req, success, error) {
-    var config  = bankruptcyConfig['company'],
-        url     = config.url;
-
-    var form = _.extend({}, config.defaultForm, {
-        'ctl00$cphBody$OrganizationCode1$CodeTextBox': req.ogrn
-    });
-
-    var headers = _.extend({}, config.defaultHeaders, {
-        'Cookie': config.defaultHeaders['Cookie'].replace(/<company_ogrn>/, req.ogrn)
-    });
+function doBankruptcy(req, success, error, config, form, headers, parseListHtml, parseBankruptcyHtml) {
+    var url = config.url;
 
     request.post({
         url: url,
@@ -82,31 +69,52 @@ exports.getCompanyBankruptcy = function(req, success, error) {
             return;
         }
 
-        var companyListData = parser.parseCompanyListHtml(body),
-            companyListSize = _.size(companyListData.list);
+        var listData = parseListHtml(body),
+            listSize = _.size(listData.list);
 
-        if (companyListData.error === 'REQUEST_BLOCKING') {
-            error(util.format('REQUEST_BLOCKING: POST %s; company_ogrn: %s', url, req.ogrn));
-        } else if (companyListSize === 1) {
-            var company = companyListData.list[0],
-                baseUrl = bankruptcyConfig['company'].report.baseUrl;
+        if (listData.error === 'REQUEST_BLOCKING') {
+            error(util.format('REQUEST_BLOCKING: POST %s; params: %s', url, JSON.stringify(req.params)));
+        } else if (listSize === 1) {
+            var item    = listData.list[0],
+                baseUrl = config.report.baseUrl,
+                itemUrl = baseUrl + item.link;
 
             request.get({
-                url: baseUrl + company.link,
+                url: itemUrl,
             }, function(err, httpResponse, body) {
                 if (err) {
-                    error(util.format('GET %s failed...\n%s', url, err));
+                    error(util.format('GET %s failed...\n%s', itemUrl, err));
                     return;
                 }
 
-                var data = parser.parseCompanyBankruptcyHtml(body, {
+                var data = parseBankruptcyHtml(body, {
                     baseUrl: baseUrl
                 });
 
                 success(data);
             });
         } else {
-            success(bankruptcyConfig['company'].emptyResponseData);
+            success(config.emptyResponseData);
         }
     });
+}
+
+
+// req: {
+//     params: {
+//         ogrn: (String)
+//     }
+// }
+exports.getCompanyBankruptcy = function(req, success, error) {
+    var config = bankruptcyConfig['company'];
+
+    var form = _.extend({}, config.defaultForm, {
+        'ctl00$cphBody$OrganizationCode1$CodeTextBox': req.params.ogrn
+    });
+
+    var headers = _.extend({}, config.defaultHeaders, {
+        'Cookie': config.defaultHeaders['Cookie'].replace(/<company_ogrn>/, req.params.ogrn)
+    });
+
+    doBankruptcy(req, success, error, config, form, headers, parser.parseCompanyListHtml, parser.parseCompanyBankruptcyHtml);
 };

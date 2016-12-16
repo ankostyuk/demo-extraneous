@@ -42,7 +42,9 @@ app.get('/fedresurs/company/bankruptcy', function(req, res, next) {
     }
 
     bankruptcy.getCompanyBankruptcy({
-        ogrn: ogrn
+        params: {
+            ogrn: ogrn
+        }
     }, function(data) {
         res.json(data);
     }, function(message) {
