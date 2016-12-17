@@ -72,7 +72,9 @@ var bankruptcyConfig = {
             }
         },
         emptyResponseData: {
-            messages: {}
+            messages: {
+                total: 0
+            }
         },
         report: {
             // baseUrl: 'http://bankrot.fedresurs-xxx.ru'
@@ -123,7 +125,9 @@ var bankruptcyConfig = {
             }
         },
         emptyResponseData: {
-            messages: {}
+            messages: {
+                total: 0
+            }
         },
         report: {
             // baseUrl: 'http://bankrot.fedresurs-xxx.ru'
