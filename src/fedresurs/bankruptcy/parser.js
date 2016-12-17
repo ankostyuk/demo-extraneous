@@ -13,7 +13,9 @@ function date(element) {
 }
 
 //
-exports.parseCompanyListHtml = function(html) {
+exports.parseListHtml = function(html) {
+    // console.log('parsing...', html);
+
     var $       = cheerio.load(html),
         list    = [];
 
@@ -46,7 +48,7 @@ exports.parseCompanyListHtml = function(html) {
     };
 };
 
-exports.parseCompanyBankruptcyHtml = function(html, dataOptions) {
+exports.parseBankruptcyHtml = function(html, dataOptions) {
     var $           = cheerio.load(html),
         messagelist = [],
         total       = null;
