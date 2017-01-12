@@ -16,7 +16,7 @@ var readFileOptions = {
 function parseCompanyListFile(htmlFile) {
     var filePath    = path.resolve(__dirname, htmlFile),
         html        = fs.readFileSync(filePath, readFileOptions),
-        data        = parser.parseCompanyListHtml(html);
+        data        = parser.parseListHtml(html);
 
     console.log('parseCompanyListFile...', filePath, '\n', data);
 
@@ -27,7 +27,7 @@ function parseCompanyBankruptcyFile(htmlFile) {
     var filePath    = path.resolve(__dirname, htmlFile),
         html        = fs.readFileSync(filePath, readFileOptions);
 
-    var data = parser.parseCompanyBankruptcyHtml(html, {
+    var data = parser.parseMessagesHtml(html, {
         baseUrl: ''
     });
 

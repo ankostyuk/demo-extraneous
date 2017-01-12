@@ -13,6 +13,16 @@ function date(element) {
 }
 
 //
+exports.parseServiceFormHtml = function(html, params) {
+    var $ = cheerio.load(html);
+
+    _.each(_.keys(params), function(k){
+        params[k] = $('input[name="' + k + '"]' + '[id="' + k + '"]').val() || '';
+    });
+
+    return params;
+};
+
 exports.parseListHtml = function(html) {
     // console.log('parsing...', html);
 
@@ -48,7 +58,7 @@ exports.parseListHtml = function(html) {
     };
 };
 
-exports.parseBankruptcyHtml = function(html, dataOptions) {
+exports.parseMessagesHtml = function(html, dataOptions) {
     var $           = cheerio.load(html),
         messagelist = [],
         total       = null;
