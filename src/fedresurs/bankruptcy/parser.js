@@ -13,11 +13,12 @@ function date(element) {
 }
 
 //
-exports.parseServiceFormHtml = function(html, params) {
-    var $ = cheerio.load(html);
+exports.parseServiceFormHtml = function(html, paramNames) {
+    var $       = cheerio.load(html),
+        params  = {};
 
-    _.each(_.keys(params), function(k){
-        params[k] = $('input[name="' + k + '"]' + '[id="' + k + '"]').val() || '';
+    _.each(paramNames, function(paramName){
+        params[paramName] = $('input[name="' + paramName + '"]' + '[id="' + paramName + '"]').val() || '';
     });
 
     return params;

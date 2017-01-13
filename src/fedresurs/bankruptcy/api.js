@@ -5,13 +5,13 @@ var request = require('request'),
 var parser  = require('./parser');
 
 //
-var fedresursBankruptcyServiceForm = {
-    '__EVENTTARGET': '',
-    '__EVENTARGUMENT': '',
-    '__VIEWSTATE': '',
-    '__VIEWSTATEGENERATOR': '',
-    '__PREVIOUSPAGE': ''
-};
+var fedresursBankruptcyServiceFormParamNames = [
+    '__EVENTTARGET',
+    '__EVENTARGUMENT',
+    '__VIEWSTATE',
+    '__VIEWSTATEGENERATOR',
+    '__PREVIOUSPAGE'
+];
 
 var fedresursBankruptcyDefaultForm = {
     // '__EVENTTARGET': '',
@@ -157,7 +157,7 @@ function doBankruptcy(req, success, error, config, form, headers, parseServiceFo
                 return;
             }
 
-            var serviceFormData = parseServiceFormHtml(body, _.extend({}, fedresursBankruptcyServiceForm));
+            var serviceFormData = parseServiceFormHtml(body, fedresursBankruptcyServiceFormParamNames);
 
             _.extend(form, serviceFormData);
 
